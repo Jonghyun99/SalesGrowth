@@ -1,22 +1,52 @@
 import requests
+import time
+import re
 from bs4 import BeautifulSoup
 from selenium import webdriver
+
+
 url = 'https://kr.investing.com/equities/nvidia-corp-earnings'
 
 #selenium start
-driver = webdriver.Chrome("")
+chrome_driver_dir = "./chromedriver.exe"
+
+options = webdriver.ChromeOptions()
+
+#크롬창 숨기기
+options.add_argument("headless")
+
+driver = webdriver.Chrome(chrome_driver_dir,options=options)
+driver.implicitly_wait(1)
 driver.get(url)
+driver.execute_script('showMoreEarningsHistory(6497)')
 
-headers = {'User-Agent': 'Mozilla/5.0'}
+time.sleep(3)
 
-response = requests.get(url,headers=headers)
+text = driver.find_element_by_xpath('//*[@id="earningsHistory6497"]').text
+# print('---------------------최근 1년간 매출 추이---------------------')
+# print(text)
+# print('--------------------------------------------------------------')
+textLst = text.split('\n')
 
-if response.status_code == 200:
-    html = response.text
-    soup = BeautifulSoup(html, 'html.parser')
-    revenue_crawl = soup.select('#earningsHistory6497 > tbody > tr > td:nth-of-type(5)')
-    for revenue in revenue_crawl:
-        print("revenue: {0}".format(revenue.text))
 
-else : 
-    print("error: {0}".format(response.status_code))
+processingLst = textLst[1:len(textLst)]
+
+revenueLst=[]
+for param in processingLst:
+    tempLst = param.split(' ')
+    revenueLst.append(tempLst[8])
+    
+
+cnt = 0
+
+# 정규표현식 규칙(숫자만 추출)
+p = re.compile("\d*\.?\d+")
+
+cnt = 0
+for param in revenueLst:
+    if param == '--':
+        revenueLst[cnt] = 0
+    revenueLst[cnt]=(p.findall(param))
+    print(revenueLst[cnt])
+    cnt = cnt + 1
+    
