@@ -43,10 +43,21 @@ cnt = 0
 p = re.compile("\d*\.?\d+")
 
 cnt = 0
+total = 0
+
+print("test1: + {0}".format(revenueLst))
+
 for param in revenueLst:
+    
     if param == '--':
         revenueLst[cnt] = 0
-    revenueLst[cnt]=(p.findall(param))
-    print(revenueLst[cnt])
+    revenueLst[cnt]=(p.finditer(param))
+    # revenueLst[cnt]=(p.findall(param))
+    # revenueLst[cnt]=(str)(revenueLst[cnt]).replace("B","")
     cnt = cnt + 1
+
+print(revenueLst)
+# for i in revenueLst:
+#     print(i)
     
+# print(revenueLst)
