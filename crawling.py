@@ -22,11 +22,12 @@ driver.execute_script('showMoreEarningsHistory(6497)')
 
 time.sleep(3)
 
-text = driver.find_element_by_xpath('//*[@id="earningsHistory6497"]').text
+earnings = driver.find_element_by_xpath('//*[@id="earningsHistory6497"]').text
+
 # print('---------------------최근 1년간 매출 추이---------------------')
 # print(text)
 # print('--------------------------------------------------------------')
-textLst = text.split('\n')
+textLst = earnings.split('\n')
 
 
 processingLst = textLst[1:len(textLst)]
@@ -45,19 +46,19 @@ p = re.compile("\d*\.?\d+")
 cnt = 0
 total = 0
 
-print("test1: + {0}".format(revenueLst))
-
+print("test1: {0}".format(revenueLst))
+valLst=[]
 for param in revenueLst:
     
-    if param == '--':
+    if not param:
         revenueLst[cnt] = 0
-    revenueLst[cnt]=(p.finditer(param))
-    # revenueLst[cnt]=(p.findall(param))
+    # revenueLst[cnt]=(p.finditer(param))
+    valLst.extend(p.findall(param))
+    # print(str)
     # revenueLst[cnt]=(str)(revenueLst[cnt]).replace("B","")
     cnt = cnt + 1
 
-print(revenueLst)
-# for i in revenueLst:
-#     print(i)
-    
-# print(revenueLst)
+print(valLst)
+valLst = map(float,valLst)
+result = sum(valLst)
+print(result)
