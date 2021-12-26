@@ -3,19 +3,19 @@ import time
 import re
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 url = 'https://kr.investing.com/equities/nvidia-corp-earnings'
 
-#selenium start
-chrome_driver_dir = "./chromedriver.exe"
 
 options = webdriver.ChromeOptions()
-
 #크롬창 숨기기
 options.add_argument("headless")
 
-driver = webdriver.Chrome(chrome_driver_dir,options=options)
+#selenium start
+driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)
 driver.implicitly_wait(1)
 driver.get(url)
 driver.execute_script('showMoreEarningsHistory(6497)')
